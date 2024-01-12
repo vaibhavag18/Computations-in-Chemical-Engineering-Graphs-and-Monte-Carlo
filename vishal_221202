@@ -1,0 +1,30 @@
+# Q1)
+class Solution {
+public:
+    ListNode* deleteMiddle(ListNode* head) {
+         if (head == nullptr || head->next == nullptr) {
+            return nullptr;  
+        }
+        ListNode* temp = head;
+        ListNode* temp2 = head;
+        while(temp2->next && temp2->next->next ){
+            temp2 = temp2->next->next;
+            if(temp2->next && temp2->next->next)
+            temp = temp->next;
+            if(temp2->next!= nullptr){
+                if(temp2->next->next == nullptr){
+                temp = temp->next;
+            }
+            }
+            
+        }
+        deletemid(temp);
+        return head;
+    } 
+
+    void deletemid(ListNode* temp){
+        ListNode* del = temp->next;
+        temp->next = temp->next->next;
+        delete(del);
+    }
+};
