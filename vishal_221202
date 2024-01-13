@@ -24,7 +24,55 @@ public:
 
     void deletemid(ListNode* temp){
         ListNode* del = temp->next;
+
         temp->next = temp->next->next;
         delete(del);
     }
 };
+
+# Q2)
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        if (list1 == nullptr) {
+            return list2;
+        }
+        if (list2 == nullptr) {
+            return list1;
+        }
+
+        ListNode* i = list1;
+        ListNode* i_prev = nullptr;
+        ListNode* j = list2;
+        ListNode* j_next = nullptr;
+
+        while (i != nullptr && j != nullptr) {
+            if (i->val < j->val) {
+                i_prev = i;
+                i = i->next;
+            } else {
+                j_next = j->next;
+
+                if (i_prev == nullptr) {
+                    j->next = list1;
+                    list1 = j;
+                    i_prev = j;
+                } else {
+                    i_prev->next = j;
+                    j->next = i;
+                    i_prev = j;
+                }
+
+                j = j_next;
+            }
+        }
+
+        if (i == nullptr) {
+            i_prev->next = j;
+        }
+
+        return list1;
+    }
+};
+
+# Q3)
