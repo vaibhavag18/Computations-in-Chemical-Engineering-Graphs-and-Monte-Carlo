@@ -91,3 +91,145 @@ public:
 };
 
 // Question 3
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> nextLargerNodes(ListNode* head) {
+
+        int n = 1; 
+        ListNode* ptr1 = head;
+        while(ptr1->next!=nullptr){
+            ptr1 = ptr1->next;
+            n++;
+        }
+        ptr1 = head;
+        ListNode* ptr2 = head;
+        vector<int> out;
+        while (ptr1 != nullptr) {
+            ListNode* ptr2 = ptr1->next;
+            int nextLargerValue = 0;
+
+            while (ptr2 != nullptr) {
+                if (ptr2->val > ptr1->val) {
+                    nextLargerValue = ptr2->val;
+                    break;
+                }
+                ptr2 = ptr2->next;
+            }
+
+            out.push_back(nextLargerValue);
+            ptr1 = ptr1->next;
+        }
+        return out;
+    }
+};
+
+// Question 4 Method 1
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        int n = 1;
+        int maxsum = 0;
+        int sum = 0;
+        ListNode* ptr1 = head;
+        ListNode* ptr2 = head;
+        while(ptr1->next!=nullptr){
+            ptr1=ptr1->next;
+            n++;
+        }
+        ptr1=head;
+        for (int i = 0; i<n/2; i++){
+            
+            for(int j = 0; j<i; j++){
+                ptr1 = ptr1->next;
+            }
+            for(int k = 0; k<n-1-i; k++){
+                ptr2 = ptr2->next;
+            }
+            sum = ptr1->val + ptr2->val;
+            if(sum>maxsum){
+                maxsum=sum;
+                ptr1 = head;
+                ptr2 = head;
+                continue;
+            }
+            else {
+                ptr1 = head;
+                ptr2 = head;
+                continue;
+            };
+        }
+        return maxsum;
+    }
+};
+
+// Question 4 Method 2
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return 0;
+        }
+
+        int maxsum = 0;
+        int n = 1;
+        ListNode* ptr = head;
+
+        while (ptr->next != nullptr) {
+            ptr = ptr->next;
+            n++;
+        }
+
+        ptr = head;
+
+        // Create an array to store the values of the linked list #The main difference between Method 1 and 2
+        vector<int> values(n);
+
+        for (int i = 0; i < n; ++i) {
+            values[i] = ptr->val;
+            ptr = ptr->next;
+        }
+
+        int left = 0, right = n - 1;
+
+        while (left < right) {
+            maxsum = max(maxsum, values[left] + values[right]);
+            left++;
+            right--;
+        }
+
+        return maxsum;
+    }
+};
