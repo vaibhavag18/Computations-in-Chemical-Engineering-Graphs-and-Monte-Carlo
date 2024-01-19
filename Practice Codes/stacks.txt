@@ -1,0 +1,53 @@
+// Question 1 - Reversal of string wrt '.'
+
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+
+class Solution
+{
+    public:
+    //Function to reverse words in a given string.
+    string reverseWords(string S) 
+    { 
+        string out;
+        string temp;
+        stack<string> stack;
+        int ctr = 0;
+        for(int i=0; i<S.length(); i++){
+            while (i < S.length() && S[i]!='.'){
+                temp.push_back(S[i]);
+                i++;
+            }
+            stack.push(temp);
+            temp.clear();
+            ctr++;
+        }
+        while (!stack.empty()){
+            out += stack.top();
+            stack.pop();
+            if (!stack.empty()) {
+                out += ".";  // Add dot between words
+            }
+        }
+        return out;
+    } 
+};
+
+//{ Driver Code Starts.
+int main() 
+{
+    int t;
+    cin >> t;
+    while (t--) 
+    {
+        string s;
+        cin >> s;
+        Solution obj;
+        cout<<obj.reverseWords(s)<<endl;
+    }
+}
+// } Driver Code Ends
