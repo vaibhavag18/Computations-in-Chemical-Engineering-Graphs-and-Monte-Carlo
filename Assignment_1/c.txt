@@ -71,4 +71,146 @@ return mergedList;
 
 
 
+Trees:
+Q1) 
+int maxDepth(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        
+        int leftDepth = maxDepth(root->left);
+        int rightDepth = maxDepth(root->right);
+        
+        return 1 + max(leftDepth, rightDepth);
+    }
+
+Q2)
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        
+        int maxLevel = 1;
+        int maxSum = root->val;
+        int currentLevel = 1;
+        
+        std::queue<TreeNode*> q;
+        q.push(root);
+        
+        while (!q.empty()) {
+            int size = q.size();
+            int levelSum = 0;
+            
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+                
+                levelSum += node->val;
+                
+                if (node->left) {
+                    q.push(node->left);
+                }
+                
+                if (node->right) {
+                    q.push(node->right);
+                }
+            }
+            
+            if (levelSum > maxSum) {
+                maxSum = levelSum;
+                maxLevel = currentLevel;
+            }
+            
+            currentLevel++;
+        }
+        
+        return maxLevel;
+    }
+};
+
 Q3)
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        return dfs(root, 0);
+    }
+    
+    int dfs(TreeNode* node, int currentSum) {
+        if (node == nullptr) {
+            return 0;
+        }
+        currentSum = currentSum * 10 + node->val;
+        
+        if (node->left == nullptr && node->right == nullptr) {
+            return currentSum;
+        }
+        int leftSum = dfs(node->left, currentSum);
+        int rightSum = dfs(node->right, currentSum);
+        
+        return leftSum + rightSum;
+    }
+};
+
+Q4)
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        int result;
+        std::queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int size = q.size();
+            for (int i = 0; i < size; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                if (i == 0) {
+                    result = node->val;
+                }
+
+                if (node->left) {
+                    q.push(node->left);
+                }
+
+                if (node->right) {
+                    q.push(node->right);
+                }
+            }
+        }
+
+        return result;
+    }
+};
+
+Q5)
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        if (nums.empty()) {
+            return nullptr;
+        }
+        
+        return buildBST(nums, 0, nums.size() - 1);
+    }
+    
+    TreeNode* buildBST(vector<int>& nums, int left, int right) {
+        if (left > right) {
+            return nullptr;
+        }
+        
+        int mid = left + (right - left) / 2;
+        TreeNode* root = new TreeNode(nums[mid]);
+        
+        root->left = buildBST(nums, left, mid - 1);
+        root->right = buildBST(nums, mid + 1, right);
+        
+        return root;
+    }
+};
+
+
+Q6)
+
