@@ -1,0 +1,62 @@
+Solution for maximum depth of binary tree
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL) return 0;
+        int left = maxDepth(root->left);
+        int right = maxDepth(root->right);
+        return max(left, right) + 1;
+    }
+};
+
+Solution of maximum level sum of a binary tree
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        queue<TreeNode*> q;
+        int maxx=INT_MIN,sum=0,count=0,ans;
+        q.push(root);
+        while(!q.empty()){
+            int n=q.size();
+            count++;
+            sum=0;
+            while(n--){
+                TreeNode* node=q.front();
+                q.pop();
+                sum+=node->val;
+                if(node->left)
+                    q.push(node->left);
+                if(node->right)
+                    q.push(node->right);
+            }
+            if(maxx<sum){
+                maxx=sum;
+                ans=count;
+            }
+        }
+        return ans;
+    }
+};
+
+Solution for Sum root to leaf number
+class Solution {
+public:
+    void path(TreeNode* root, int& sum, int& num) {
+        if (!root) 
+            return;
+        if (!root->left && !root->right) {
+            sum += num * 10 + root->val;
+            return;
+        }
+        num = num * 10 + root->val;
+        path(root->left, sum, num);
+        path(root->right, sum, num);
+        num = num / 10;
+    }
+
+    int sumNumbers(TreeNode* root) {
+        int sum = 0, num = 0;
+        path(root, sum, num);
+        return sum;
+    }
+};
