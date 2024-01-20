@@ -1,0 +1,35 @@
+* Q2
+class Solution {
+public:
+    vector<int> v;
+    int max_level = 0;
+
+    void dfs(TreeNode* root, int n){
+        if(root == nullptr) return;
+         if (v.size() <= n) {
+            v.resize(n + 1, 0);
+        }
+        v[n] = v[n] + root->val;
+        max_level = max(max_level,n);
+        if(root->left){
+
+            dfs(root->left, n+1);
+        }
+        if(root->right){
+            dfs(root->right, n+1);
+        }
+    }
+    int maxLevelSum(TreeNode* root) {
+       dfs(root,1);
+       int maxsum = INT_MIN; 
+       int index = 0;
+       for(int i = 1; i<= max_level; i++){
+           if(maxsum < v[i]){
+               maxsum = v[i];
+               index = i;
+           }
+       }
+       return index;
+        
+    }
+};
