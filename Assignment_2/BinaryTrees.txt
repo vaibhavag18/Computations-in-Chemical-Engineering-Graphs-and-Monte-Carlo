@@ -1,0 +1,209 @@
+// Question 1 : MaxDepth Implementation
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        // Implementing using Recursion
+        if (root == nullptr) {
+            return 0;
+        }
+
+        int leftDepth = maxDepth(root->left);
+        int rightDepth = maxDepth(root->right);
+
+        return max(leftDepth, rightDepth) + 1; // to account for the root we need to add 1
+    }
+};
+
+// Question 2 : MaxSumLevel Implementation (This gives the level which has the maximum sum)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxLevelSum(TreeNode* root) {
+        // To store information of Level and Level sum as Key and Value respectively
+        unordered_map<int, int> levelSums;
+
+        // Generating all the key value pairs using the recursive helper function
+        calculateLevelSums(root, 1, levelSums);
+
+        // Finding the key(level)[and storing it in maxLevel] with maximum value by storing the maximum value in maxSum
+        int maxSum = INT_MIN;
+        int maxLevel = INT_MIN;
+        for (const auto& entry : levelSums) {
+            maxSum = max(maxSum, entry.second);
+            if(maxSum == entry.second){
+                    maxLevel = entry.first;
+            }
+            else continue;
+        }
+
+        return maxLevel;
+    }
+
+private:
+    void calculateLevelSums(TreeNode* root, int level, unordered_map<int, int>& levelSums) { 
+        if (root == nullptr) {
+            return;
+        }
+
+        // Adding Value to the respective level keys in the Unordered Map
+        levelSums[level] += root->val;
+
+        // Recursion
+        calculateLevelSums(root->left, level + 1, levelSums);
+        calculateLevelSums(root->right, level + 1, levelSums);
+    }
+};
+
+// Question 3 : Sum of Root-Leaf Numbers
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    int sumNumbers(TreeNode* root) {
+        if (root == nullptr){
+            return 0;
+        }
+        string s = to_string(root->val);
+        int sumleftright = sum(root->left, s) + sum(root->right, s);
+        if(sumleftright == 0){
+            return stoi(s);
+        }
+        return sumleftright;
+    }
+private:
+    int sum(TreeNode* root, const string& s){
+        if (root == nullptr){
+            return 0;
+        }
+        
+        string r = s + to_string(root->val);
+
+        if (root->left == nullptr && root->right == nullptr){
+            return stoi(r);
+        }
+
+        int leftsum = sum(root->left, r);
+        int rightsum = sum(root->right, r);
+
+        return leftsum+rightsum;
+    }
+
+};
+
+// Question 4 : *Finding The Left-Most value of the Lowest Level in the Tree
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        int a = maxlength(root->left); //maxlength does not include root
+        int b = maxlength(root->right);
+        
+        if(a==0 && b==0){
+            return root->val;
+        }
+        else if(a==b){
+            return findBottomLeftValue(root->left);
+        }
+        
+        else if(a>b){
+             return findBottomLeftValue(root->left);
+        }
+        
+        return findBottomLeftValue(root->right);
+    }
+
+private:
+    int maxlength(TreeNode* root) {
+        // Implemented in Question 1 i.e. MaxDepth Function
+         if (root == nullptr) {
+            return 0;
+        }
+
+        int leftDepth = maxlength(root->left);
+        int rightDepth = maxlength(root->right);
+
+        return max(leftDepth, rightDepth) + 1; // to account for the root we need to add 1
+    }
+};
+
+// Question 5 : Sorting an Array into a Binary Search Tree (Implementing Binary Search with recursion)
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int ctr = nums.size();
+        
+        if(ctr == 0){
+            return nullptr;
+        }
+        else{
+            // Applying Binary Search in 2 lines of code effectively
+            int mid = ctr/2;
+            TreeNode* root = new TreeNode(nums[mid]); //
+            // Notice that we need not make cases for odd and even here
+
+            // Breaking the vector into 2 and using recursion
+            vector<int> left(nums.begin(), nums.begin() + mid);
+            vector<int> right(nums.begin() + mid + 1, nums.end());
+            root->left = sortedArrayToBST(left);
+            root->right = sortedArrayToBST(right);
+            return root;
+        }
+    }
+};
