@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int n, m, vis[205][205];
+    bool pacific, atlantic;
+    vector<vector<int>> grids;
+
+    bool valid(int x, int y) {
+        if(x >= 0 and x < n+2 and y >= 0 and y < m+2 and !vis[x][y]) return true;
+        else return false;
+    }
+
+    void dfs(int x, int y) {
+        vis[x][y] = 1;
+        if(x == 0 or y == 0) {
+            pacific = 1;
+            return;
+        }
+        if(x == n+1 or y == m+1) {
+            atlantic = 1;
+            return;
+        }
+        if(valid(x+1, y) and grids[x][y] >= grids[x+1][y]) dfs(x+1, y);
+        if(valid(x-1, y) and grids[x][y] >= grids[x-1][y]) dfs(x-1, y);
+        if(valid(x, y+1) and grids[x][y] >= grids[x][y+1]) dfs(x, y+1);
+        if(valid(x, y-1) and grids[x][y] >= grids[x][y-1]) dfs(x, y-1);
+    }
+
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        n = heights.size(), m = heights[0].size();
+        vector<vector<int>> tmp(205, vector<int> (205, 0));
+        grids = tmp;
+        for(int i=1; i<=n; i++) for(int j=1; j<=m; j++) grids[i][j] = heights[i-1][j-1];
+
+        vector<vector<int>> ans;
+        for(int i=1; i<=n; i++) {
+            for(int j=1; j<=m; j++) {
+                memset(vis, 0, sizeof(vis));
+                pacific = 0, atlantic = 0;
+                dfs(i, j);
+                if(pacific and atlantic) ans.push_back({i-1, j-1});
+            }
+        }
+        return ans;
+    }
+};
