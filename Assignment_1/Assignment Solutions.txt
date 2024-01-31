@@ -1,0 +1,77 @@
+Solution of Delete the middle node of Linked List
+class Solution {
+public:
+    ListNode* deleteMiddle(ListNode* head) {
+        if(head->next==NULL) return NULL;
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast->next->next&&fast->next->next->next){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        slow->next=slow->next->next;
+        return head;
+ }
+};
+
+
+Solution of Merge Two Sorted Lists
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* C=new ListNode(100);
+        ListNode* a=list1;
+        ListNode* b=list2;
+        ListNode* t=C;
+        while(a!=NULL&&b!=NULL){
+            if(a->val<=b->val){
+               t->next=a;
+               t=a;
+               a=a->next;
+            }
+            else{
+               t->next=b;
+               t=b;
+               b=b->next;
+            }
+        }
+        if(a==NULL) t->next=b;
+        else t->next=a;
+        return C->next;
+    }
+};
+
+
+Solution of Maximum Twin Sum Problem
+class Solution {
+public:
+    ListNode*reverse(ListNode*head){
+        ListNode* prev=NULL,*curr=head,*Next=head;
+        while(curr){
+            Next=curr->next;;
+            curr->next=prev;
+            prev=curr;
+            curr=Next;
+        }
+        return prev;
+    }
+    int pairSum(ListNode* head) {
+        int m=INT_MIN;
+        ListNode*slow=head;
+        ListNode*fast=head;
+        while(fast->next->next){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        ListNode*t=reverse(slow->next);
+        slow->next=NULL;
+        ListNode*a=head;
+        ListNode*b=t;
+        while(a){
+            m=max(m,(a->val+b->val));
+            a=a->next;
+            b=b->next;
+        }
+        return m;
+    }
+};
