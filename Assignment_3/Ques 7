@@ -1,0 +1,45 @@
+class Solution {
+public:
+    void exploreGraph(int node, vector<vector<int>> &adjacencyList, vector<int> &quietness,
+                      vector<int> &visited, vector<int> &result) {
+        visited[node] = 1;
+        int currentQuietest = node;
+
+        for (auto neighbor : adjacencyList[node]) {
+            if (!visited[neighbor]) {
+                exploreGraph(neighbor, adjacencyList, quietness, visited, result);
+            }
+
+            if (quietness[currentQuietest] > quietness[result[neighbor]]) {
+                currentQuietest = result[neighbor];
+            }
+        }
+
+        result[node] = currentQuietest;
+    }
+
+    vector<int> findQuietestRichPerson(vector<vector<int>>& richer, vector<int>& quietness) {
+        vector<vector<int>> adjacencyList(quietness.size() + 1);
+
+        for (int i = 0; i < richer.size(); i++) {
+            adjacencyList[richer[i][1]].push_back(richer[i][0]);
+        }
+
+        vector<int> result(quietness.size());
+        iota(result.begin(), result.end(), 0);  // Initialize result with node indices.
+
+        vector<int> visited(quietness.size(), 0);
+
+        for (int i = 0; i < quietness.size(); i++) {
+            if (!visited[i]) {
+                exploreGraph(i, adjacencyList, quietness, visited, result);
+            }
+        }
+
+        return result;
+    }
+
+    vector<int> loudAndRich(vector<vector<int>>& richer, vector<int>& quiet) {
+        return findQuietestRichPerson(richer, quiet);
+    }
+};
