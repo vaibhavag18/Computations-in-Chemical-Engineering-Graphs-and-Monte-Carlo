@@ -1,1 +1,136 @@
+class MyStack {
+public:
+ queue<int> q1,q2;
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        while(!q1.empty())
+        {
+            q2.push(q1.front());
+            q1.pop();
+        }
+        q1.push(x);
+        while(!q2.empty()){
+            q1.push(q2.front());
+            q2.pop();
+        }
+       
+    }
+    
+    int pop() {
+    int val=q1.front();
+    q1.pop();
+    return val; 
+    }
+    
+    int top() {
+       return q1.front();
+    }
+    
+    bool empty() {
+        return q1.empty();
+    }
+};
+//////////////////////
+bool alphanum(char &c){
+    return (((c>='a' && c<='z') || (c>='A' && c<='Z')) || (c>='0' && c<='9'));
+}
+bool ispalin(string &s, int idx1, int idx2){
+
+
+    if(idx1>idx2){
+        return true;
+    }
+    if(!alphanum(s[idx1])){
+        return ispalin(s,idx1+1,idx2);
+    }
+    if(!alphanum(s[idx2])){
+        return ispalin(s,idx1,idx2-1);
+    }
+
+
+    char x=s[idx1];
+    char y=s[idx2];
+    if(x>='a'){
+
+
+    }
+    else{
+        x=x-'A'+'a';
+    }
+    if(y>='a'){
+
+
+    }
+    else{
+        y=y-'A'+'a';
+    }
+    if(x!=y){
+        return false;
+    }
+    return ispalin(s,idx1+1,idx2-1);
+}
+    bool isPalindrome(string s) {
+
+
+        return ispalin(s,0,s.size()-1);
+
+
+
+
+
+
+       
+    }
+////////////////////
+
+class Solution {
+public:
+vector<int>  nextSmaller(vector<int> &nums){
+    vector<int> ans(nums.size(),nums.size());
+    stack<int> st;
+    for(int i=nums.size()-1;i>=0;i--){
+        while(!st.empty() && nums[st.top()]>=nums[i]){
+            st.pop();
+        }
+        if(!st.empty()){
+            ans[i]=st.top();
+        }
+        st.push(i);
+    }
+    return ans;
+}
+vector<int>  prevSmaller(vector<int> &nums){
+    vector<int> ans(nums.size(),-1);
+    stack<int> st;
+    for(int i=0;i<nums.size();i++){
+        while(!st.empty() && nums[st.top()]>=nums[i]){
+            st.pop();
+        }
+        if(!st.empty()){
+            ans[i]=st.top();
+        }
+        st.push(i);
+    }
+    return ans;
+}
+    int largestRectangleArea(vector<int>& nums) {
+
+
+        vector<int> next=nextSmaller(nums);
+        vector<int> prev=prevSmaller(nums);
+        int max_el=0;
+        for(int i=0;i<nums.size();i++){
+            int r=next[i]-1;
+            int l=prev[i]+1;
+            max_el=max(max_el,(r-l+1)*nums[i]);
+
+
+        }
+        return max_el;
+    }
+};
+
 
