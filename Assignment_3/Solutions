@@ -1,0 +1,217 @@
+class Solution {
+public: 
+    void dfs(int node, vector<int>& vis, const vector<vector<int>>& adj) {
+        vis[node] = 1; 
+        for (int neighbor : adj[node]) {
+            if (vis[neighbor] == 0) {
+                dfs(neighbor, vis, adj);
+            }
+        }
+    }
+
+    int findCircleNum(const vector<vector<int>>& isConnected) {
+        int n = isConnected.size();
+        vector<vector<int>> adj(n);
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i != j && isConnected[i][j] == 1) {
+                    adj[i].push_back(j);
+                    adj[j].push_back(i);
+                }
+            }
+        } 
+
+        vector<int> vis(n, 0);
+        int count = 0;
+
+        for (int i = 0; i < n; ++i) {
+            if (vis[i] == 0) {
+                count++;
+                dfs(i, vis, adj);
+            }
+        }
+
+
+        return count;
+    }
+};
+
+
+
+
+
+
+///////////////////////////////
+class Solution {
+public:    
+    void dfs1(vector<vector<int>> & heights, vector<vector<int>> &visited,int row,int col){
+        visited[row][col]=1;
+
+        int delrow[]={1,-1,0,0};
+        int delcol[]={0,0,1,-1};
+
+
+        for(int i=0;i<4;i++){
+            int new_row=row+delrow[i];
+            int new_col=col+delcol[i];
+
+            if(new_row>=0 && new_row<heights.size() && new_col>=0 && new_col<heights[0].size()){
+                if(!visited[new_row][new_col] && heights[new_row][new_col]>=heights[row][col]){
+                    dfs1(heights,visited,new_row,new_col);
+                }
+            }
+        }
+    }
+
+    void dfs2(vector<vector<int>> & heights, vector<vector<int>>& visited, vector<vector<int>> & vis, int row,int col,vector<vector<int>> & ans){
+        if(vis[row][col]==1){
+            return ;
+        }
+        if(visited[row][col]){
+            vector<int> temp;
+            temp.push_back(row);
+            temp.push_back(col);
+            ans.push_back(temp);
+        }
+        
+        vis[row][col]=1;
+
+        int delrow[]={1,-1,0,0};
+        int delcol[]={0,0,1,-1};
+
+
+        for(int i=0;i<4;i++){
+            int new_row=row+delrow[i];
+            int new_col=col+delcol[i];
+
+            if(new_row>=0 && new_row<heights.size() && new_col>=0 && new_col<heights[0].size()){
+                if(vis[new_row][new_col]==0 && heights[new_row][new_col]>=heights[row][col]){
+                    dfs2(heights,visited,vis,new_row,new_col,ans);
+                }
+            }
+        }
+
+
+    }
+
+ 
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+
+        vector<vector<int>> visited(heights.size(),vector<int>(heights[0].size(),0));
+        vector<vector<int>> vis(heights.size(),vector<int>(heights[0].size(),0));
+
+        for(int i=0;i<heights.size();i++){
+            dfs1(heights,visited,i,0);
+        }
+        for(int j=1;j<heights[0].size();j++){
+            dfs1(heights,visited,0,j);
+        }
+
+        display(visited);
+
+        vector<vector<int>> ans;
+        for(int i=0;i<heights.size();i++){
+            dfs2(heights,visited,vis,i,heights[0].size()-1,ans);
+        }
+
+        for(int j=0;j<heights[0].size()-1;j++){
+            dfs2(heights,visited,vis,heights.size()-1,j,ans);
+        }
+
+        return ans;
+
+
+        
+    }
+};
+
+
+
+////////////////////////////////////////////////////////////////
+class Solution {
+public:
+bool solve(int node, vector<int> & vis,vector<vector<int>> & adj){
+    for(auto it:adj[node]){
+        if(vis[it]==-1){
+            vis[it]=!vis[node];
+            if(!solve(it,vis,adj)){
+                return false;
+            }
+        }
+        else if(vis[it]==vis[node]){
+            return false;
+        }
+    }
+    return true;
+}
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+
+
+        vector<vector<int>> adj(n+1);
+        for(int i=0;i<dislikes.size();i++){
+            adj[dislikes[i][0]].push_back(dislikes[i][1]);
+            adj[dislikes[i][1]].push_back(dislikes[i][0]);
+        }
+
+        vector<int> vis(n+1,-1);
+        for(int i=1;i<=n;i++){
+            if(vis[i]==-1){
+                vis[i]=0;
+                if(!solve(i,vis,adj)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+
+
+///////////////////////////////////////
+class Solution {
+public:
+void dfs(int node,vector<vector<int>> & adj, vector<int> & quiet,
+vector<int> & vis,vector<int> & ans){
+    vis[node]=1;
+    int x=node;
+    for(auto it:adj[node]){
+        if(vis[it]){
+        }
+        else{
+            dfs(it,adj,quiet,vis,ans);
+        }
+         if(quiet[x]>quiet[ans[it]]){
+                x=ans[it];
+            }
+
+    }
+    ans[node]=x;
+
+}
+    vector<int> loudAndRich(vector<vector<int>>& richer, vector<int>& quiet) {
+
+        vector<vector<int>> adj(quiet.size()+1);
+        for(int i=0;i<richer.size();i++){
+            adj[richer[i][1]].push_back(richer[i][0]);
+        }
+        vector<int> ans(quiet.size());
+        for(int i=0;i<ans.size();i++){
+            ans[i]=i;
+        }
+
+        vector<int> vis(quiet.size());
+        for(int i=0;i<quiet.size();i++){
+            if(!vis[i]){
+                dfs(i,adj,quiet,vis,ans);
+            }
+        }
+        return ans;
+        
+    }
+};
+
+
+
+
+
